@@ -1,5 +1,5 @@
 <?
-include __DIR__ . '/../../inc/bd.php';
+include __DIR__ . '/../../config.php';
 //удаляем жанр
 
 $id = htmlentities(trim($_GET[id]))*1;

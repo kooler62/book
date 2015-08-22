@@ -1,6 +1,6 @@
 <?
 ob_start();
-include __DIR__ . '/../../inc/bd.php';
+include __DIR__ . '/../../config.php';
 include __DIR__ . '/../../inc/translit.php';
 
 echo "$_POST[genre]";

@@ -1,5 +1,5 @@
 <?
-include __DIR__ . '/models/bd.php';
+include __DIR__ . '/../config.php';
 //подключаем хедер
 include __DIR__ . '/../inc/ad_mail.php';
 $title = 'Книга';

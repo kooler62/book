@@ -1,6 +1,7 @@
 <?
 ob_start();
-include '../../inc/bd.php';
+
+include __DIR__ . '/../../config.php';
 include '../../inc/translit.php';
 
 echo "$_POST[author]";

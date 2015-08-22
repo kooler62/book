@@ -1,7 +1,7 @@
 <?
 include __DIR__ . '/../inc/ad_mail.php';
 //подключение к базе
-include __DIR__ . '/models/sqli.php';
+include __DIR__ . '/../config.php';
 
 //подключаем хедер
 $title = 'Жанры';

@@ -1,5 +1,5 @@
 <?
-include __DIR__ .'/models/bd.php';
+include __DIR__ . '/../config.php';
 
 //вытащим id из REFERER http://book/admin/book.php/?id= 31 символа
 $book_id = substr($_SERVER[HTTP_REFERER],31);

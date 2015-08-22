@@ -14,7 +14,7 @@
 				<li><form action="/admin/"><input name="search" type="text" placeholder="Поиск"></form></li>
 				<li>|</li>
 				<li><a href="/admin/add_book.php">Добавить книгу</a></li>
-				<li title="e-mail куда придет заказ, чтобы изменить зайдите в файл /inc/ad_mail.php"><?echo "$e_mail";?></li>
+				<li title="e-mail куда придет заказ, чтобы изменить зайдите в файл /inc/ad_mail.php"><?=MAIL?></li>
 				<li><a href="/">выход</a></li>
 			</ul>
 		</header>

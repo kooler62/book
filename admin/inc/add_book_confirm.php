@@ -1,5 +1,5 @@
 <?
-include __DIR__ . '/../models/bd.php';
+include __DIR__ . '/../../config.php';
 include __DIR__ . '/functions.php';
 
 $future_id = get_id($db,books);

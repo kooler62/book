@@ -1,6 +1,6 @@
 <?
 //подключение к базе
-include __DIR__ . '/models/bd.php';
+include __DIR__ . '/config.php';
 
 //подключаем хедер
 $title = 'Каталог';
