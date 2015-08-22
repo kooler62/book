@@ -1,0 +1,5 @@
+AuthName "Log In"
+AuthType Basic
+AuthUserFile C:/OpenServer/domains/book/.htpasswd
+require valid-user
+

@@ -1,0 +1,13 @@
+.inp_title{width: 500px;margin-right: 20px;float:right;}
+textarea{width: 650px;
+height: 300px;}
+
+body > img:nth-child(3){
+	width: 250px;
+	height: 410px;
+	background-image: url(/img/default.jpg);
+	background-repeat: no-repeat;
+	background-size: 250px 410px;
+}
+.del_a{font-size: 10px;
+color: red;}
