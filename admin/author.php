@@ -1,67 +1,69 @@
 <?
-include __DIR__ . '/../inc/ad_mail.php';
-//подключение к базе
 include __DIR__ . '/../config.php';
+include_once __DIR__ . '/../functions.php';
+
 //подключаем хедер
 $title='Авторы';
 include __DIR__ . '/views/header.php';
 include __DIR__ . '/views/add_author.php';
-include __DIR__ . '/../inc/dont_hack.php';
 $id=dont_hack($_GET[id],int);
 
-echo "<section class=\"authors\">";
 if ( isset($_GET[id]) && !empty($_GET[id]) ) {
-	$select_sql_1 = "SELECT * FROM authors WHERE author_id=$id";
-	$result_1 = mysqli_query($db, $select_sql_1) or die(mysqli_error($db));
-	$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
-	echo "Вcе книги автора $myrow_1[author_name]:";
-	
-	$select_sql = "SELECT book FROM book_author WHERE author=$id";
-	$result = mysqli_query($db, $select_sql) or die(mysqli_error($db));
-	$how = mysqli_num_rows($result);
+	//если есть идентификатор автора
+	$myrow_1=sql_fetch_where('*', 'authors', "author_id=$id");
+	if ($myrow_1[author_name]=='') {
+		$message='нет такого автора!';
+	}
+	else{
+		$start_message="Вcе книги автора $myrow_1[author_name]:";
+	}	
+	$result = select_where('book','book_author',"author=$id",'');
+	$how = sql_how_where('book','book_author',"author=$id");
 	if ($how == 0) {
-		echo "<br> 0 результатов";
+		$message='<br> 0 результатов';
+		//echo "$message";
 	}
 	else{
 		for ($i=0; $i < $how; $i++) { 
 			$myrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
-			$select_sql_2 = "SELECT * FROM books WHERE book_id=$myrow[book]";
-			$result_2 = mysqli_query($db, $select_sql_2) or die(mysqli_error($db));
-			$myrow_2 = mysqli_fetch_array($result_2, MYSQLI_ASSOC);
-			echo "<h2><a href=\"/admin/book.php?id=$myrow_2[book_id]\">$myrow_2[book_title]</a></h2>";
+
+			$myrow_2 = sql_fetch_where('*','books',"book_id=$myrow[book]");
+			$book[$i][book_id]=$myrow_2[book_id];
+			$book[$i][book_title]=$myrow_2[book_title];
 		}
 	}
 }
 else{
 	//если нет $_GET[id] жанра, выведем все жанры
 	//узнаем сколько всего страниц
-	$select_sql_100 = "SELECT author_id FROM authors";
-	$result_100 = mysqli_query($db, $select_sql_100) or die(mysqli_error($db));
-	$how_pages = mysqli_num_rows($result_100);
-
-	if ( isset($_GET[page]) && !empty($_GET[page]) ) {
+	$how_pages = sql_how('author_id','authors');
+	if (isset($_GET[page]) && !empty($_GET[page])) {
 		$page = dont_hack($_GET[page],int);
-		$offset = ($page - 1) * 12;
-		$select_sql_1="SELECT * FROM authors LIMIT $offset, 12";
+		$offset = ($page-1)*12;
+		$result_1 = sql_limit('*','authors',"$offset,12");
+		for ($i=0; $i < $how_pages-1; $i++) { 
+			$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
+			$author[$i][author_id]=$myrow_1[author_id];
+			$author[$i][author_name]=$myrow_1[author_name];
+		}
 	}
 	else{
-		$select_sql_1 = "SELECT * FROM authors LIMIT 12";
-	}
-	$result_1 = mysqli_query($db, $select_sql_1) or die(mysqli_error($db));
-	//echo "$how_pages";
-	for ($i=0; $i < $how_pages-1; $i++) { 
-		$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
-		if ( !empty($myrow_1[author_name]) ) {
-			echo '<a href="/admin/author.php/?id=' . $myrow_1[author_id]
-		. '">' . $myrow_1[author_name].'</a>';
-		echo '<a title="удалить" style="color:red" class="del_a" href="/admin/inc/del_author.php/?id='. $myrow_1[author_id].'">х</a><br>';
-		}else{echo "<br>";}	
+		$result_1 = sql_limit('*','authors','12');
+		if ($how_pages>=12) {
+			//присваеваем другой переменоой, чтоб не сбить страничную навигацию
+			$how_a=12;
+		}
+		else{
+		$how_a=$how_pages;
+		}
+		for ($i=0; $i < $how_a; $i++) { 
+			$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
+			$author[$i][author_id]=$myrow_1[author_id];
+			$author[$i][author_name]=$myrow_1[author_name];
+		}
 	}
 }
-echo "</section>";
-// подключаем пагинацию
-echo "<nav>";
 
-include_once __DIR__ . '/../inc/pagination.php';
-echo pagination($how_pages);
-echo "</nav>";
+include __DIR__ . '/views/author.php';
+// подключаем пагинацию
+include __DIR__ . '/../views/nav.php';

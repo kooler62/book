@@ -1,6 +1,6 @@
 <?
 include __DIR__ . '/../config.php';
-
+include_once __DIR__ . '/../functions.php';
 //вытащим id из REFERER http://book/admin/book.php/?id= 31 символа
 $book_id = substr($_SERVER[HTTP_REFERER],31);
 $book_id = htmlentities(trim($book_id))*1;

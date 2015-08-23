@@ -1,16 +1,15 @@
 <?
-//подключение к базе
 include __DIR__ . '/config.php';
+include_once __DIR__ . '/functions.php';
 
 //подключаем хедер
 $title = 'Каталог';
 include __DIR__ . '/views/header.php';
 
-include_once __DIR__ . '/inc/funcs.php';
 ?><section><?
 
 //если есть параметра search подключаем вывод резльтатов по поиску
-if (isset($_GET[search]) && !empty($_GET[search])) {
+if (isset($_GET['search']) && !empty($_GET['search'])) {
 	$title = 'Результаты поиска';
 	include __DIR__ . '/inc/search_result.php';
 }
@@ -22,8 +21,8 @@ $page_result = mysqli_query($db, $for_page) or die(mysqli_error($db));
 $how_pages = mysqli_num_rows($page_result);
 
 //проверка на наличие параметра GET[page]
-if (isset($_GET[page]) && !empty($_GET[page])) {
-	$page = dont_hack($_GET[page],int);
+if (isset($_GET['page']) && !empty($_GET['page'])) {
+	$page = dont_hack($_GET['page'],int);
 	$offset = ($page - 1) * 12;
 	$select_sql="SELECT * FROM books ORDER BY book_id DESC LIMIT $offset,12";
 }
@@ -78,10 +77,7 @@ for ($i=0; $i < $how; $i++) {
 }
 ?>
 </section>
-<nav>
+
 <?
-echo pagination($how_pages);
-?>
-</nav>
-<?
+include __DIR__ . '/views/nav.php';
 include __DIR__ . '/views/footer.php';

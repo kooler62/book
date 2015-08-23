@@ -1,13 +1,11 @@
 <?
-//подключение к базе
 include __DIR__ . '/config.php';
+include_once __DIR__ . '/functions.php';
 
 //подключаем хедер
 $title = 'Каталог';
 include __DIR__ . '/views/header.php';
 
-// функция защиты параметров
-include __DIR__ . '/inc/funcs.php';
 
 $id = dont_hack($_GET[id],int);
 $name = dont_hack($_GET[name],int);

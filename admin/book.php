@@ -1,7 +1,8 @@
 <?
 include __DIR__ . '/../config.php';
+include_once __DIR__ . '/../functions.php';
+
 //подключаем хедер
-include __DIR__ . '/../inc/ad_mail.php';
 $title = 'Книга';
 include __DIR__ . '/views/header.php';
 

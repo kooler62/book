@@ -1,7 +1,8 @@
 <?
+include __DIR__ . '/../config.php';
+include_once __DIR__ . '/../functions.php';
 $search = htmlentities(trim($_GET[search]));
 
-include __DIR__ . '/../models/bd.php';
 
 $sql = "SELECT book_id,book_title FROM books WHERE MATCH(book_title) AGAINST('".$search."')";
 $result = mysqli_query($db,$sql)or die(mysqli_error($db));
