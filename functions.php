@@ -1,6 +1,6 @@
 <?
 /**
-*	echo dont_hack($_GET[page]); 
+*	echo dont_hack($_GET[page]); срока(удаление пробелов и экранирование тегов)
 *	echo dont_hack($_GET[page],int); значение от 0 до 9
 *	echo dont_hack($_GET[page],int,signed); от -9 до 9
 */
@@ -15,10 +15,11 @@ function dont_hack($param, $type = 'string', $sign = 'unsigned'){
 		//число без знака
 		if ($sign == 'unsigned') {
 			//убирем отрицательное
-			return trim( abs( (int)$param ) );
+			//return trim( abs( (int)$param ) );
+			return abs((int)trim($param));
 		}
 		else{
-			return trim( (int)$param );
+			return (int)trim($param);
 		}
 	}
 }
