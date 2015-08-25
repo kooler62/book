@@ -1,8 +1,8 @@
 <?
 include __DIR__ . '/../config.php';
 include_once __DIR__ . '/../functions.php';
-$search = htmlentities(trim($_GET[search]));
 
+$search = dont_hack($_GET[search]);
 
 $sql = "SELECT book_id,book_title FROM books WHERE MATCH(book_title) AGAINST('".$search."')";
 $result = mysqli_query($db,$sql)or die(mysqli_error($db));
@@ -22,4 +22,5 @@ for ($i=0; $i < $how; $i++) {
 	echo "<a href=\"/book.php/?id=$row[book_id]\">$text_mark</a>";
 	echo "<br>";
 }
+//include '/../views/books.php';
 exit();

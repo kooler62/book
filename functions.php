@@ -161,6 +161,10 @@ function sql_how_where($select, $from, $where){
 	return select_where($select, $from, $where, 'how_many');
 }
 
+function sql_how_end($select, $from, $end){
+	return select_end($select, $from, 'how_many');
+}
+
 function sql_fetch($select, $from){
 	global $db;
 	$sql = "SELECT $select FROM $from";
@@ -198,6 +202,19 @@ function select($select, $from, $answer=''){
 function select_where($select, $from, $where, $answer=''){
 	global $db;
 		$sql = "SELECT $select FROM $from WHERE $where";
+		$result = mysqli_query($db, $sql) or die(mysqli_error($db));
+		if ($answer == 'how_many') {
+			return mysqli_num_rows($result);
+		}
+		if ($answer == 'fetch') {
+			return mysqli_fetch_array($result, MYSQLI_ASSOC);
+		}
+		return $result;
+}
+
+function select_end($select, $from, $end, $answer=''){
+	global $db;
+		$sql = "SELECT $select FROM $from $end";
 		$result = mysqli_query($db, $sql) or die(mysqli_error($db));
 		if ($answer == 'how_many') {
 			return mysqli_num_rows($result);
