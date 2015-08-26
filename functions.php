@@ -121,16 +121,9 @@ function pagination($posts,$on_page='12',$mini_view=7,$delim=' ... ',$this_page=
 }
 //echo pagination(100);
 
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////
 #							MySQL SCRIPTS
 /////////////////////////////////////////////////////////////////////////
-
-
 /*
 получить значение автоинкремента таблицы
 */
@@ -154,9 +147,6 @@ function sql_limit($select, $from, $limit){
 	return $result;
 }
 
-//sql_fetch_query(){}
-
-
 function sql_how_where($select, $from, $where){
 	return select_where($select, $from, $where, 'how_many');
 }
@@ -169,7 +159,6 @@ function sql_fetch($select, $from){
 	global $db;
 	$sql = "SELECT $select FROM $from";
 	$result = mysqli_query($db, $sql) or die(mysqli_error($db));
-	//return select($select, $from, 'fetch');
 	return mysqli_fetch_array($result, MYSQLI_ASSOC);
 }
 
@@ -177,16 +166,20 @@ function sql_fetch_where($select, $from, $where){
 	return select_where($select, $from, $where, 'fetch');
 }
 
+function sql_del($table, $where){
+	global $db;
+	$sql = "DELETE FROM $table WHERE $where";
+	$result = mysqli_query($db, $sql) or die(mysqli_error($db));
+}
+
 function select($select, $from, $answer=''){
 	global $db;
-
 	if ($answer=='limit') {
 		$sql = "SELECT $select FROM $from LIMIT $limit";
 	}
 	else{
 		$sql = "SELECT $select FROM $from";
 	}
-	
 	$result = mysqli_query($db, $sql) or die(mysqli_error($db));
 	if ($answer == 'how_many') {
 		return mysqli_num_rows($result);
@@ -195,8 +188,6 @@ function select($select, $from, $answer=''){
 		return mysqli_fetch_array($result, MYSQLI_ASSOC);
 	}
 	return $result;
-
-
 }
 
 function select_where($select, $from, $where, $answer=''){
@@ -224,7 +215,3 @@ function select_end($select, $from, $end, $answer=''){
 		}
 		return $result;
 }
-
-
-
-

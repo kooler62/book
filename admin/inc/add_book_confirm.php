@@ -1,6 +1,6 @@
 <?
 include __DIR__ . '/../../config.php';
-include __DIR__ . '/functions.php';
+include __DIR__ . '/../../functions.php';
 
 $future_id = get_id($db,books);
 $select_sql = "INSERT INTO books (book_id, book_title, book_img, book_price, book_description)
@@ -14,9 +14,7 @@ if ( !empty($_POST[author]) ) {
 		//запятой нету->автор 1
 		//проверим, есть ли такой автора в базе
 		$aut = dont_hack($_POST[author]);
-		$sql_find_author = "SELECT author_id FROM authors WHERE author_name='$aut'";
-		$result_find_author = mysqli_query($db, $sql_find_author) or die(mysqli_error($db));
-		$row_find_author = mysqli_fetch_array($result_find_author, MYSQLI_ASSOC);
+		$row_find_author = sql_fetch_where('author_id', 'authors', "author_name='$aut'");
 		if ($row_find_author) {
 			//автор есть берем его id $row_find_author[author_id]
 			//закидываем в таблицу автор_книга айди книги
@@ -50,14 +48,11 @@ if ( !empty($_POST[author]) ) {
 			//вытаскиваем автора
 			$aut = $pieces_a[$i];
 			//провери наличие автора в базе
-			$sql_find_author = "SELECT author_id FROM authors WHERE author_name='$aut'";
-			$result_find_author = mysqli_query($db, $sql_find_author) or die(mysqli_error($db));
-			$how_find_author = mysqli_num_rows($result_find_author);
+			$how_find_author = sql_how_where('author_id', 'authors', "author_name='$aut'");
 			//если автор есть
 			if ($how_find_author >= 1) {
-				$myrow = mysqli_fetch_array($result_find_author, MYSQLI_ASSOC);
-				//автор есть
-				//берем его id
+				$myrow = sql_fetch_where('author_id', 'authors', "author_name='$aut'");
+				//автор есть, берем его id
 				$author_id = $myrow[author_id];
 			metka:
 				//инсёртим автора и книгу в таблицу книга_автор
@@ -78,19 +73,15 @@ if ( !empty($_POST[author]) ) {
 	//все хорошо
 	}
 }
-	//теперь таким же макаром с жанрами
+
 //проверим заполнены ли поля жанра
 if ( !empty($_POST[genre]) ) {
-
 	//проверим, есть ли запятые в поле жанра
 	if (strpos($_POST[genre],',') === false) {
 		//запятой нету-> 1 жанр
 		//проверим, есть ли такой жанр в базе
 		$gen = dont_hack($_POST[genre]);
-		$sql_find_genre = "SELECT genre_id FROM genres WHERE genre_name='$gen'";
-		$result_find_genre = mysqli_query($db, $sql_find_genre) or die(mysqli_error($db));
-		$row_find_genre = mysqli_fetch_array($result_find_genre, MYSQLI_ASSOC);
-		
+		$row_find_genre = sql_fetch_where('genre_id', 'genres', "genre_name='$gen'");
 		if ($row_find_genre) {
 			//жанр есть берем его id $row_find_genre[genre_id]
 			//закидываем в таблицу жанр_книга айди книги
@@ -124,9 +115,7 @@ if ( !empty($_POST[genre]) ) {
 			//вытаскиваем жанр
 			$gen = $pieces_g[$i];
 			//провери наличие автора в базе
-			$sql_find_genre = "SELECT genre_id FROM genres WHERE genre_name='$gen'";
-			$result_find_genre = mysqli_query($db, $sql_find_genre) or die(mysqli_error($db));
-			$how_find_genre = mysqli_num_rows($result_find_genre);
+			$how_find_genre = sql_how_where('genre_id', 'genres', "genre_name='$gen'");
 			//если жанр есть
 			if ($how_find_genre >= 1) {
 				$myrow = mysqli_fetch_array($result_find_genre, MYSQLI_ASSOC);

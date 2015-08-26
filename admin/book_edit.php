@@ -6,8 +6,7 @@ $book_id = substr($_SERVER[HTTP_REFERER],31);
 $book_id = dont_hack($book_id,int);
 
 //инсертим осовные понятия в книгу с выбраным айдишником
-$select_sql = "UPDATE books
-SET 
+$select_sql = "UPDATE books SET 
 book_title='".$_POST[title]."',
 book_img='".$_POST[img]."',
 book_price='".$_POST[price]."',
@@ -16,16 +15,11 @@ WHERE book_id=$book_id";
 $result = mysqli_query($db, $select_sql) or die(mysqli_error($db));
 
 #######################################################################
-//не будем проверять как изменились данные в авторе  и жанре, просто удалим и создадим заново
+//не будем проверять как изменились данные в авторе и жанре, просто удалим и создадим заново
 //удалим жанры
-$select_sql2 = "DELETE FROM book_genre
-WHERE book=$book_id";
-$result2 = mysqli_query($db, $select_sql2) or die(mysqli_error($db));
+sql_del('book_genre', "book=$book_id");
 //теперь удалим авторов 
-$select_sql1 = "DELETE FROM book_author
-WHERE book=$book_id";
-$result1 = mysqli_query($db, $select_sql1) or die(mysqli_error($db));
-
+sql_del('book_author', "book=$book_id");
 //Создание
 //проверим заполнены ли поля автора
 if  (!empty($_POST[author]) ) {
@@ -34,10 +28,7 @@ if  (!empty($_POST[author]) ) {
 		//запятой нету->автор 1
 		//проверим, есть ли такой автора в базе
 		$aut = dont_hack($_POST[author]);
-		//echo "$aut";
-		$sql_find_author = "SELECT author_id FROM authors WHERE author_name='$aut'";
-		$result_find_author = mysqli_query($db, $sql_find_author) or die(mysqli_error($db));		
-		$row_find_author = mysqli_fetch_array($result_find_author, MYSQLI_ASSOC);
+		$row_find_author = sql_fetch_where('author_id', 'authors', "author_name='$aut'");
 		if ($row_find_author) {
 			//автор есть берем его id $row_find_author[author_id]
 			//закидываем в таблицу автор_книга айди книги
@@ -72,12 +63,10 @@ if  (!empty($_POST[author]) ) {
 			//вытаскиваем автора
 			$aut=$pieces_a[$i];
 			//провери наличие автора в базе
-			$sql_find_author = "SELECT author_id FROM authors WHERE author_name='$aut'";
-			$result_find_author = mysqli_query($db, $sql_find_author) or die(mysqli_error($db));
-			$how_find_author = mysqli_num_rows($result_find_author);
+			$how_find_author = sql_how_where('author_id', 'authors', "author_name='$aut'");
 			//если автор есть
 			if ($how_find_author >=1) {
-				$myrow = mysqli_fetch_array($result_find_author, MYSQLI_ASSOC);
+				$myrow = sql_fetch_where('author_id', 'authors', "author_name='$aut'");
 				//автор есть,берем его id
 				$author_id = $myrow[author_id];
 			metka:
@@ -102,15 +91,12 @@ if  (!empty($_POST[author]) ) {
 
 //проверим заполнены ли поля жанра
 if ( !empty($_POST[genre]) ) {
-
 	//проверим, есть ли запятые в поле жанра
 	if (strpos($_POST[genre],',') === false) {
 		//запятой нету-> 1 жанр
 		//проверим, есть ли такой жанр в базе
 		$gen = dont_hack($_POST[genre]);
-		$sql_find_genre = "SELECT genre_id FROM genres WHERE genre_name='$gen'";
-		$result_find_genre = mysqli_query($db, $sql_find_genre) or die(mysqli_error($db));
-		$row_find_genre = mysqli_fetch_array($result_find_genre, MYSQLI_ASSOC);
+		$row_find_genre = sql_fetch_where('genre_id', 'genres', "genre_name='$gen'");
 		if ($row_find_genre) {
 			//жанр есть берем его id $row_find_genre[genre_id]
 			//закидываем в таблицу жанр_книга айди книги
@@ -126,7 +112,7 @@ if ( !empty($_POST[genre]) ) {
 			VALUES ('".$future_gen."','".$gen."')";
 			$gen_create_result=mysqli_query($db, $gen_create) or die(mysqli_error($db));
 			//создали, присваеваем автора и кидаем выше на метку
-			$row_find_author[genre_id]=$future_gen;
+			$row_find_genre[genre_id]=$future_gen;
 			goto genre_one;
 		}
 	}else{
@@ -143,19 +129,17 @@ if ( !empty($_POST[genre]) ) {
 		for ($i=0; $i < count($pieces_g); $i++) { 
 			//вытаскиваем жанр
 			$gen = $pieces_g[$i];
-			//провери наличие автора в базе
-			$sql_find_genre = "SELECT genre_id FROM genres WHERE genre_name='$gen'";
-			$result_find_genre = mysqli_query($db, $sql_find_genre) or die(mysqli_error($db));
-			$how_find_genre = mysqli_num_rows($result_find_genre);
+			//провери наличие жанра в базе
+			$how_find_genre = sql_how_where('genre_id', 'genres', "genre_name='$gen'");
 			//если жанр есть
 			if ($how_find_genre >= 1) {
-				$myrow = mysqli_fetch_array($result_find_genre, MYSQLI_ASSOC);
 				//жанр есть
 				//берем его id
 				$genre_id = $myrow[genre_id];
 			genre_metka:
 				//инсёртим жанр и книгу в таблицу книга_жанр
-				$sql_insert_genre = "INSERT INTO book_genre (book,genre) VALUES ('$book_id','$genre_id')";
+				$sql_insert_genre = "INSERT INTO book_genre (book, genre) 
+				VALUES ('".$book_id."','".$row_find_genre[genre_id]."')";
 				$result_insert_genre = mysqli_query($db, $sql_insert_genre) or die(mysqli_error($db));
 			}else{
 				//если жанра нет
@@ -164,8 +148,8 @@ if ( !empty($_POST[genre]) ) {
 				$gen_create = "INSERT INTO genres (genre_id, genre_name)
 				VALUES ('".$future_gen."','".$gen."')";
 				$gen_create_result = mysqli_query($db, $gen_create) or die(mysqli_error($db));
-				$genre_id = $future_gen;
-				//переброс на проверку автора
+				//создали присваеваем жанр и кидаем выше на метку
+				$row_find_genre[genre_id]=$future_gen;
 				goto genre_metka;
 			}
 		}

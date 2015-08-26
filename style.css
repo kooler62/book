@@ -42,8 +42,16 @@ article{
 	width: 278px;
 }
 
-article h2{font-size: 20px;line-height: 50px;}
-article h2 a{text-decoration: none;color: black;}
+article h2{
+	font-size: 20px;line-height: 50px;
+	white-space: nowrap; /* Отменяем перенос текста */
+	overflow: hidden; /* Обрезаем содержимое */
+	text-overflow: ellipsis;
+}
+article h2 a{
+	text-decoration: none;
+	color: black;
+}
 article h2 a:hover{color: grey;}
 
 .book_title{

@@ -1,22 +1,20 @@
 <?
 include __DIR__ . '/../../config.php';
 include_once __DIR__ . '/../../functions.php';
-$search=htmlentities(trim($_GET[search]));
+$search=dont_hack($_GET[search]);
 
 
 $sql = "SELECT book_id,book_title FROM books WHERE MATCH(book_title) AGAINST('".$search."')";
 $result = mysqli_query($db,$sql)or die(mysqli_error($db));
 $how = mysqli_num_rows($result);
 
-echo "По запросу '".$search."' найдено  $how результатов<br><hr>";
+echo "По запросу '".$search."' найдено  $how результатов:<br><hr>";
 
-for ($i=0; $i < $how; $i++) { 
+for ($i=0; $i < $how; $i++) {
 	$row = mysqli_fetch_assoc($result);
 	$cc = $row[cat];
 	//подбираем категорию
-	$sql_c = "SELECT book_id,book_title FROM books WHERE book_id='".$cc."'";
-	$result_c = mysqli_query($db,$sql_c)or die(mysqli_error($db));
-	$row_c = mysqli_fetch_assoc($result_c);
+	$row_c=sql_fetch_where('book_id,book_title', 'books',"book_id='".$cc."'");
 	//вхождение и искомое слово обрамляем маркером
 	$text_mark = str_replace("$search", "<mark>$search</mark>", "$row[book_title]");
 	echo "<a href=\"/admin/book.php/?id=$row[book_id]\">$text_mark</a>";
