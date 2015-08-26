@@ -1,4 +1,4 @@
-<img src="<?=$book[book_img]?>">
+<img class="img_bag" src="<?=$book[book_img]?>">
 <h2>
 <?php foreach ($book[book_genre][genre_name] as  $key => $value) :?>
 <a href="/genre.php/?id=<?=$key?>"><?=$value;?></a> 
