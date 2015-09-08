@@ -215,3 +215,53 @@ function select_end($select, $from, $end, $answer=''){
 		}
 		return $result;
 }
+
+function sql_insert_one($table, $field, $value){
+	global $db;
+	$sql = "INSERT INTO $table ($field) VALUES ('".$value."')";
+	$result = mysqli_query($db, $sql) or die(mysqli_error($db));
+}
+
+
+
+
+function sql_insert($table, $object){
+ 	global $db;
+        $columns = array();
+        $values = array();
+        foreach ($object as $key => $value) {
+            $columns[] = '`' . $key . '`';
+            if ($value === null) {
+                $values[] = 'NULL';
+            }
+            else {
+                $values[] = "'$value'";
+            }
+        }
+        $columns_s = implode(',', $columns);
+        $values_s = implode(',', $values);
+        $sql = "INSERT INTO {$table} ({$columns_s}) VALUES ({$values_s})";
+		$result = mysqli_query($db, $sql) or die(mysqli_error($db));
+}
+
+function sql_update_where($table, $object,$where){
+ 	global $db;
+        $columns = array();
+       // $values = array();
+        foreach ($object as $key => $value) {
+        	if ($value === null || isset($value) || $value='') {
+                $values[] = 'NULL';
+            }
+           // else {
+           //     $values[] = "'$value'";
+           // }
+            $columns[] = '`' . $key . '`=`'.$value .'`';
+            //$columns[] =  $key . '='.$value ;
+        }
+        $columns_s = implode(',', $columns);
+        //echo "$columns_s";
+        //$values_s = implode(',', $values);
+        $sql = "UPDATE  $table SET ({$columns_s}) WHERE $where";
+       
+		$result = mysqli_query($db, $sql) or die(mysqli_error($db));
+}

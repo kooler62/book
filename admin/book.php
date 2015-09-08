@@ -16,8 +16,9 @@ if ( isset($id) && !empty($id) ) {
 	}
 	$book = sql_fetch_where('*', 'books', "book_id=$id");
 	//ищем авторов по айди этой книги
-	$select_sql_2 = "SELECT author FROM book_author WHERE book=$id";
-	$result_2 = mysqli_query($db, $select_sql_2) or die(mysqli_error($db));
+	$result_2=select_where('author','book_author',"book=$id",'');
+
+
 	//сколько авторов
 	$how_2 = mysqli_num_rows($result_2);
 	//если авторов больше одного используем цикл
@@ -46,8 +47,7 @@ if ( isset($id) && !empty($id) ) {
 		}
 	}
 	//ищем жанры по айди этой книги
-	$select_sql_2 = "SELECT genre FROM book_genre WHERE book=$id";//.$book[book_genre];
-	$result_2 = mysqli_query($db, $select_sql_2) or die(mysqli_error($db));
+	$result_2=select_where('genre','book_genre',"book=$id",'');
 	//сколько жанров
 	$how_2 = mysqli_num_rows($result_2);
 	//если жанров больше одного используем цикл

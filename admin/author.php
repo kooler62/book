@@ -63,7 +63,6 @@ else{
 		}
 	}
 }
-
 include __DIR__ . '/views/author.php';
 // подключаем пагинацию
 include __DIR__ . '/../views/nav.php';

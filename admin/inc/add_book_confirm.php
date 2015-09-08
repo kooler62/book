@@ -3,9 +3,9 @@ include __DIR__ . '/../../config.php';
 include __DIR__ . '/../../functions.php';
 
 $future_id = get_id($db,books);
-$select_sql = "INSERT INTO books (book_id, book_title, book_img, book_price, book_description)
-VALUES ('".$future_id."','".$_POST[title]."','".$_POST[img]."','".$_POST[price]."','".$_POST[text]."')";
-$result=mysqli_query($db, $select_sql) or die(mysqli_error($db));
+
+$ara = array('book_id' => $future_id,'book_title' =>$_POST['title'],'book_img'=>$_POST['img'],'book_price'=>$_POST['price'],'book_description'=>$_POST['text']);
+sql_insert('books',$ara);
 
 //проверим заполнены ли поля автора
 if ( !empty($_POST[author]) ) {
@@ -19,16 +19,14 @@ if ( !empty($_POST[author]) ) {
 			//автор есть берем его id $row_find_author[author_id]
 			//закидываем в таблицу автор_книга айди книги
 		author_one:
-			$add_aut = "INSERT INTO book_author (book, author)
-			VALUES ('".$future_id."','".$row_find_author[author_id]."')";
-			$add_aut_result = mysqli_query($db, $add_aut) or die(mysqli_error($db));
+			$ara1=array('book'=>$future_id, 'author'=>$row_find_author[author_id]);
+			sql_insert('book_author',$ara1);
 		}else{
 			//автора нет!
 			//нужно создать автора а для этого нужно получить значение инкремента
 			$future_aut = get_id($db,authors);
-			$aut_create = "INSERT INTO authors (author_id, author_name)
-			VALUES ('".$future_aut."','".$aut."')";
-			$aut_create_result = mysqli_query($db, $aut_create) or die(mysqli_error($db));
+			$ara2=array('author_id'=>$future_aut, 'author_name'=>$aut);
+			sql_insert('authors',$ara2);
 			//создали присваеваем автора и кидаем выше на метку
 			$row_find_author[author_id]=$future_aut;
 			goto author_one;
@@ -56,15 +54,14 @@ if ( !empty($_POST[author]) ) {
 				$author_id = $myrow[author_id];
 			metka:
 				//инсёртим автора и книгу в таблицу книга_автор
-				$sql_insert_author = "INSERT INTO book_author (book,author) VALUES ('$future_id','$author_id')";
-				$result_insert_author = mysqli_query($db, $sql_insert_author) or die(mysqli_error($db));
+				$ara3=array('book'=>$future_id, 'book'=>$author_id);
+				sql_insert('book_author',$ara3);
 			}else{
 				//если автора нет
 				//создадим автора/возьмем его авто инкремент значение и кинем на метку
 				$future_aut = get_id($db,authors);
-				$aut_create = "INSERT INTO authors (author_id, author_name)
-				VALUES ('".$future_aut."','".$aut."')";
-				$aut_create_result = mysqli_query($db, $aut_create) or die(mysqli_error($db));
+				$ara4=array('author_id'=>$future_aut, 'author_name'=>$aut);
+				sql_insert('authors',$ara4);
 				$author_id = $future_aut;
 				//переброс на проверку автора
 				goto metka;
@@ -86,16 +83,14 @@ if ( !empty($_POST[genre]) ) {
 			//жанр есть берем его id $row_find_genre[genre_id]
 			//закидываем в таблицу жанр_книга айди книги
 		genre_one:
-			$add_gen = "INSERT INTO book_genre (book, genre)
-			VALUES ('".$future_id."','".$row_find_genre[genre_id]."')";
-			$add_gen_result=mysqli_query($db, $add_gen) or die(mysqli_error($db));
+			$ara5=array('book'=>$future_id, 'genre'=>$row_find_genre[genre_id]);
+			sql_insert('book_genre',$ara5);
 		}else{
 			//жанра нет!
 			//нужно создать жанр а для этого нужно получить значение инкремента
 			$future_gen = get_id($db,genres);
-			$gen_create = "INSERT INTO genres (genre_id, genre_name)
-			VALUES ('".$future_gen."','".$gen."')";
-			$gen_create_result=mysqli_query($db, $gen_create) or die(mysqli_error($db));
+			$ara6=array('genre_id'=>$future_gen, 'genre_name'=>$gen);
+			sql_insert('genres',$ara6);
 			//создали, присваеваем автора и кидаем выше на метку
 			$row_find_author[genre_id]=$future_gen;
 			goto genre_one;
@@ -124,15 +119,14 @@ if ( !empty($_POST[genre]) ) {
 				$genre_id = $myrow[genre_id];
 			genre_metka:
 				//инсёртим жанр и книгу в таблицу книга_жанр
-				$sql_insert_genre = "INSERT INTO book_genre (book,genre) VALUES ('$future_id','$genre_id')";
-				$result_insert_genre = mysqli_query($db, $sql_insert_genre) or die(mysqli_error($db));
+				$ara7=array('book'=>$future_id, 'genre'=>$genre_id);
+				sql_insert('book_genre',$ara7);
 			}else{
 				//если жанра нет
 				//создадим жанр/возьмем его авто инкремент значение и кинем на метку
 				$future_gen = get_id($db,genres);
-				$gen_create = "INSERT INTO genres (genre_id, genre_name)
-				VALUES ('".$future_gen."','".$gen."')";
-				$gen_create_result=mysqli_query($db, $gen_create) or die(mysqli_error($db));
+				$ara8=array('genre_id'=>$future_gen, 'genre_name'=>$gen);
+				sql_insert('genres',$ara8);
 				$genre_id = $future_gen;
 				//переброс на проверку автора
 				goto genre_metka;

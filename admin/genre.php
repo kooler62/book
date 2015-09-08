@@ -8,7 +8,6 @@ include __DIR__ . '/views/header.php';
 include __DIR__ . '/views/add_genre.php';
 $id = dont_hack($_GET[id],int);
 
-
 if ( isset($_GET[id]) && !empty($_GET[id]) ) {
 	//если есть идентификатор жанра
 	$myrow_1=sql_fetch_where('*', 'genres', "genre_id=$id");
