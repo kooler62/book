@@ -252,16 +252,9 @@ function sql_update_where($table, $object,$where){
         	if ($value === null || isset($value) || $value='') {
                 $values[] = 'NULL';
             }
-           // else {
-           //     $values[] = "'$value'";
-           // }
-            $columns[] = '`' . $key . '`=`'.$value .'`';
-            //$columns[] =  $key . '='.$value ;
+            $columns[] =  "$key='$value'";
         }
         $columns_s = implode(',', $columns);
-        //echo "$columns_s";
-        //$values_s = implode(',', $values);
-        $sql = "UPDATE  $table SET ({$columns_s}) WHERE $where";
-       
+        $sql = "UPDATE  $table SET $columns_s WHERE $where";
 		$result = mysqli_query($db, $sql) or die(mysqli_error($db));
 }
