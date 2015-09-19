@@ -16,10 +16,9 @@ if ( isset($id) && !empty($id) ) {
 	}
 	$book = sql_fetch_where('*', 'books', "book_id=$id");
 	//ищем авторов по айди этой книги
-	$select_sql_2 = "SELECT author FROM book_author WHERE book=$id";
-	$result_2 = mysqli_query($db, $select_sql_2) or die(mysqli_error($db));
+	$result_2 = select_where('author','book_author',"book=$id",'');
 	//сколько авторов
-	$how_2 = mysqli_num_rows($result_2);
+	$how_2 = sql_how_result($result_2);
 	//если авторов больше одного используем цикл
 	if ( !isset($how_2) or $how_2 == 0 ) {
 		//echo nothing
@@ -34,7 +33,7 @@ if ( isset($id) && !empty($id) ) {
 		else{
 			// если авторов больше одного
 			for ($a=1; $a <= $how_2; $a++) { 
-				$book_2 = mysqli_fetch_array($result_2, MYSQLI_ASSOC);
+				$book_2 = sql_fetch_result($result_2);
 				$book_3= sql_fetch_where('*', 'authors', "author_id=$book_2[author]");
 				$book[book_author][author_name][$book_3[author_id]]=$book_3[author_name];
 			}
@@ -42,9 +41,8 @@ if ( isset($id) && !empty($id) ) {
 	}
 	//ищем жанры по айди этой книги
 	//сколько жанров
-	$select_sql_5 = "SELECT genre FROM book_genre WHERE book=$id";
-	$result_5 = mysqli_query($db, $select_sql_5) or die(mysqli_error($db));
-	$how_5 = mysqli_num_rows($result_5);
+	$result_5 = select_where('genre','book_genre',"book=$id",'');
+	$how_5 = sql_how_result($result_5);
 	//если жанров больше одного используем цикл
 	if ( !isset($how_5) or $how_5 == 0 ) {
 		//echo nothing
@@ -52,14 +50,14 @@ if ( isset($id) && !empty($id) ) {
 	else{
 		// если есть 1 жанр
 		if ($how_5 == 1) {
-			$book_5 = mysqli_fetch_array($result_5, MYSQLI_ASSOC);
+			$book_5 = sql_fetch_result($result_5);
 			$book_4 = sql_fetch_where('*', 'genres', "genre_id=$book_5[genre]");
 			$book[book_genre][genre_name][$book_4[genre_id]]=$book_4[genre_name];
 		}
 		else{
 		// если жанров больше одного
 			for ($a=1; $a <= $how_5; $a++) { 
-				$book_5 = mysqli_fetch_array($result_5, MYSQLI_ASSOC);
+				$book_5 = sql_fetch_result($result_5);
 				$book_4 = sql_fetch_where('*', 'genres', "genre_id=$book_5[genre]");
 				$book[book_genre][genre_name][$book_4[genre_id]]=$book_4[genre_name];
 			}
@@ -68,9 +66,7 @@ if ( isset($id) && !empty($id) ) {
 }
 //подключаем вид книги
 include __DIR__ . '/views/book.php';
-
 //подключаем форму заказа
 include __DIR__ . '/views/order.php';
-
 //подключаем футер
 include __DIR__ . '/views/footer.php';

@@ -21,14 +21,13 @@ if ( isset($_GET[id]) && !empty($_GET[id]) ) {
 	$how = sql_how_where('book','book_genre',"genre=$id");
 	if ($how == 0) {
 		$message='<br> 0 результатов';
-		//echo "$message";
 	}
 	else{
-		for ($i=0; $i < $how; $i++) { 
-			$myrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
+		for ($i=0; $i < $how; $i++) {
+			$myrow = sql_fetch_result($result);
 			$myrow_2 = sql_fetch_where('*','books',"book_id=$myrow[book]");
-			$book[$i][book_id]=$myrow_2[book_id];
-			$book[$i][book_title]=$myrow_2[book_title];
+			$book[$i][book_id] = $myrow_2[book_id];
+			$book[$i][book_title] = $myrow_2[book_title];
 		}
 	}
 }
@@ -40,10 +39,10 @@ else{
 		$page = dont_hack($_GET[page],int);
 		$offset = ($page-1)*12;
 		$result_1 = sql_limit('*','genres',"$offset,12");
-		for ($i=0; $i < $how_pages-1; $i++) { 
-			$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
-			$genre[$i][genre_id]=$myrow_1[genre_id];
-			$genre[$i][genre_name]=$myrow_1[genre_name];
+		for ($i=0; $i < $how_pages-1; $i++) {
+			$myrow_1 = sql_fetch_result($result_1);
+			$genre[$i][genre_id] = $myrow_1[genre_id];
+			$genre[$i][genre_name] = $myrow_1[genre_name];
 		}
 	}
 	else{
@@ -55,11 +54,10 @@ else{
 		else{
 		$how_a=$how_pages;
 		}
-		for ($i=0; $i < $how_a; $i++) { 
-			$myrow_1 = mysqli_fetch_array($result_1, MYSQLI_ASSOC);
-			$genre[$i][genre_id]=$myrow_1[genre_id];
-			$genre[$i][genre_name]=$myrow_1[genre_name];
-
+		for ($i=0; $i < $how_a; $i++) {
+			$myrow_1 = sql_fetch_result($result_1);
+			$genre[$i][genre_id] = $myrow_1[genre_id];
+			$genre[$i][genre_name] = $myrow_1[genre_name];
 		}
 	}
 }

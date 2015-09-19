@@ -9,16 +9,7 @@ $book_id = dont_hack($book_id,int);
 
 $ara=array('book_title'=>$_POST[title],'book_img'=>$_POST[img],'book_price'=>$_POST[price],'book_description'=>$_POST[text]);
 sql_update_where('books',$ara,"book_id=$book_id");
-/*
-$select_sql = "UPDATE books SET 
-book_title='".$_POST[title]."',
-book_img='".$_POST[img]."',
-book_price='".$_POST[price]."',
-book_description='".$_POST[text]."'
-WHERE book_id=$book_id";
-$result = mysqli_query($db, $select_sql) or die(mysqli_error($db));
-*/
-#######################################################################
+
 //не будем проверять как изменились данные в авторе и жанре, просто удалим и создадим заново
 //удалим жанры
 sql_del('book_genre', "book=$book_id");

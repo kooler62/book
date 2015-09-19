@@ -20,20 +20,20 @@ if ( isset($_GET[page]) && !empty($_GET[page]) ) {
 else{
 	$result=select_end('*','books',"ORDER BY book_id DESC LIMIT 12",'');
 }
-$how = mysqli_num_rows($result);
+$how = sql_how_result($result);
 for ($i=0; $i < $how; $i++) { 
-	$myrow = mysqli_fetch_array($result, MYSQLI_ASSOC);
+	$myrow = sql_fetch_result($result);
 	$books[$i]=$myrow;
 	//вытаскиваем в цикле авторов, если есть
 	$result_2=select_where('author','book_author',"book=$myrow[book_id]",'');
 	//сколько авторов
-	$how_2 = mysqli_num_rows($result_2);
+	$how_2 = sql_how_result($result_2);
 	//если авторов больше одного используем цикл
 	if ($how_2 >1 && $how_2!=0) {
-		for ($a=1; $a <= $how_2; $a++) { 
-			$myrow_2 = mysqli_fetch_array($result_2, MYSQLI_ASSOC);
+		for ($a=1; $a <= $how_2; $a++) {
+			$myrow_2 = sql_fetch_result($result_2);
 			$result_3=select_where('*','authors',"author_id=$myrow_2[author]",'');
-			$myrow_3 = mysqli_fetch_array($result_3, MYSQLI_ASSOC);
+			$myrow_3 = sql_fetch_result($result_3);
 			$books[$i][author][]=$myrow_3;
 		}
 	}
@@ -42,9 +42,9 @@ for ($i=0; $i < $how; $i++) {
 		if ($how_2 == 0) {$books[$i][author][][author_name]='<br>';}
 		else{
 			//если есть (один)
-			$myrow_2 = mysqli_fetch_array($result_2, MYSQLI_ASSOC);
+			$myrow_2 = sql_fetch_result($result_2);
 			$result_3=select_where('*','authors',"author_id=$myrow_2[author]",'');
-			$myrow_3 = mysqli_fetch_array($result_3, MYSQLI_ASSOC);
+			$myrow_3 = sql_fetch_result($result_3);
 			$books[$i][author][]=$myrow_3;
 		}
 	}

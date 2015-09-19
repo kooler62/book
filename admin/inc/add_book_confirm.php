@@ -113,7 +113,7 @@ if ( !empty($_POST[genre]) ) {
 			$how_find_genre = sql_how_where('genre_id', 'genres', "genre_name='$gen'");
 			//если жанр есть
 			if ($how_find_genre >= 1) {
-				$myrow = mysqli_fetch_array($result_find_genre, MYSQLI_ASSOC);
+				$myrow = sql_fetch_result($result_find_genre);
 				//жанр есть
 				//берем его id
 				$genre_id = $myrow[genre_id];

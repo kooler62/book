@@ -139,6 +139,12 @@ function get_id($db,$table){
 function sql_how($select, $from){
 	return select($select, $from, 'how_many');
 }
+function sql_how_result($result){
+	return mysqli_num_rows($result);
+}
+	function sql_fetch_result($result){
+		return mysqli_fetch_array($result, MYSQLI_ASSOC);
+}
 
 function sql_limit($select, $from, $limit){
 	global $db;
@@ -222,7 +228,12 @@ function sql_insert_one($table, $field, $value){
 	$result = mysqli_query($db, $sql) or die(mysqli_error($db));
 }
 
-
+function sql_search($select,$from,$where,$search){
+	global $db;
+	$sql = "SELECT $select FROM $from WHERE MATCH($where) AGAINST('".$search."')";
+	$result = mysqli_query($db,$sql)or die(mysqli_error($db));
+	return $result;
+}
 
 
 function sql_insert($table, $object){
